@@ -9,7 +9,7 @@ OpenNebula `Marketplace Appliance <https://marketplace.opennebula.systems/applia
 Without any parameters provided, the appliance deploys as a single Kubernetes master node. Appliance can be customized with :ref:`contextualization <k8s_context_param>` parameters to support manually managed multi-node deployments, or automatically managed multi-node cluster as OpenNebula `OneFlow service <http://docs.opennebula.org/stable/advanced_components/application_flow_and_auto-scaling/appflow_use_cli.html>`_.
 
 .. include:: shared/general.txt
-* Preconfigured with Canal CNI (`Calico <https://www.projectcalico.org/>`_, `Flannel <https://github.com/coreos/flannel>`_)
+* Preconfigured with Canal CNI networking (`Calico <https://www.projectcalico.org/>`_, `Flannel <https://github.com/coreos/flannel>`_)
 
 Quick Start
 ===========
@@ -83,7 +83,7 @@ For other cases when the default behavior is not sufficient, you can contextuali
 
 .. important::
 
-   The following description of the ``ONEAPP_K8S_ADDRESS`` applies to a master node only! For the worker nodes, the value must be strictly the advertised IP address of the master node!
+On *master node* the parameter ``ONEAPP_K8S_ADDRESS`` may be set either to the IP address or to a subnet (see below). The purpose of this option is to pin Kubernetes communication to a designated interface and a network. So it will not be exposed on the default interface.  For the *worker nodes*, the value must be strictly the advertised IP address of the master node!
 
 Master node's ``ONEAPP_K8S_ADDRESS`` parameter can contain:
 
@@ -92,7 +92,7 @@ Master node's ``ONEAPP_K8S_ADDRESS`` parameter can contain:
    * a subnet, e.g. ``192.168.122.0/24`` (as above)
    * or an IP address with a subnet prefix, e.g.: ``192.168.122.10/24``
 
-Use any format which makes sense for your scenario. The purpose of this option is to pin Kubernetes communication to a designated interface and a network. So it will not be exposed on the default interface.
+Use any format which makes sense for your scenario.
 
 ``ONEAPP_K8S_NODENAME`` is an option solely for a convenience (to easily distinct multiple clusters by a mere look on the name of the master node). It will set a name for the master node in the Kubernetes cluster and can be seen when you run:
 
@@ -132,7 +132,7 @@ Worker Node
 
 New nodes can join already running Kubernetes cluster, if they are provided with following contextualization parameters:
 
-* ``ONEAPP_K8S_ADDRESS`` - master node's IP address (**NOT** a network address or a subnet!!!)
+* ``ONEAPP_K8S_ADDRESS`` - master node's IP address (**NOT** a network address or a subnet!)
 * ``ONEAPP_K8S_TOKEN``
 * ``ONEAPP_K8S_HASH``
 
@@ -222,7 +222,7 @@ In the **Parent roles** section, set the **master** as a parent role:
 
 .. important::
 
-   Both the parent relationship and the checkbox **Wait for VMs to report that they are READY via OneGate to consider them running** must be configure properly, otherwise the deployment will not work! With the wrong service template, all nodes might be started at the same time and configured as independent single-node clusters.
+   Don't forget to check ✓ the **Wait for VMs to report that they are READY via OneGate to consider them running** for both - Master and Worker and also the **Parent roles** for the Worker node.  Otherwise the deployment will not work! With the wrong service template, all nodes might be started at the same time and configured as independent single-node clusters.
 
 At the end, click on the green **Create** button at the top.
 
